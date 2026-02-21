@@ -80,17 +80,20 @@
 ### 方式一：一键部署 (推荐)
 
 ```bash
-# 克隆项目
+# 1. 克隆项目
 git clone https://github.com/Starlight-apk/NexusChat.git
 cd NexusChat
 
-# 运行部署脚本
+# 2. 添加脚本执行权限
+chmod +x scripts/deploy.sh
+
+# 3. 运行部署脚本
 ./scripts/deploy.sh --quick
 
-# 启动服务器
+# 4. 启动服务器
 ./scripts/deploy.sh --start
 
-# 查看状态
+# 5. 查看状态
 ./scripts/deploy.sh --status
 ```
 

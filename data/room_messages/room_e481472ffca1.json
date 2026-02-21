@@ -1,0 +1,12 @@
+{
+  "messages": [
+    {
+      "type": "room_message",
+      "room_id": "room_e481472ffca1",
+      "from": "fd22e996d17fe59f",
+      "from_username": "test123",
+      "content": "测试消息",
+      "timestamp": 1771642245.0039554
+    }
+  ]
+}

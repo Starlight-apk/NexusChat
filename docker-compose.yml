@@ -1,0 +1,17 @@
+version: '3.8'
+
+services:
+  nexuschat:
+    build: .
+    ports:
+      - "5222:5222"
+    volumes:
+      - ./data:/app/data
+      - ./logs:/app/logs
+      - ./config:/app/config
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c", "import socket; s=socket.socket(); s.connect(('localhost',5222)); s.close()"]
+      interval: 30s
+      timeout: 10s
+      retries: 3

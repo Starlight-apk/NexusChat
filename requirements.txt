@@ -1,0 +1,11 @@
+# NexusChat - 最小依赖要求
+# 核心依赖仅使用 Python 标准库，以下为可选增强功能
+
+# YAML 配置支持 (可选，如未安装则使用 JSON)
+PyYAML>=6.0
+
+# 密码哈希增强 (可选，如未安装则使用 hashlib)
+bcrypt>=4.0
+
+# 生产环境可选：uvloop 性能提升
+# uvloop>=0.17

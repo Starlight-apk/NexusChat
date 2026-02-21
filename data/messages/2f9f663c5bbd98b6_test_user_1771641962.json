@@ -1,0 +1,12 @@
+{
+  "messages": [
+    {
+      "type": "message",
+      "from": "2f9f663c5bbd98b6",
+      "from_username": "test_user_1771641962",
+      "to": "test_user_1771641962",
+      "content": "离线消息测试",
+      "timestamp": 1771641963.8216376
+    }
+  ]
+}

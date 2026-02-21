@@ -1,0 +1,36 @@
+{
+  "room_59c0e74b8363": {
+    "id": "room_59c0e74b8363",
+    "name": "测试房间_1771642228",
+    "owner_id": "9e95b51590537090",
+    "created_at": 1771642228.955547,
+    "is_public": true,
+    "members": [
+      "9e95b51590537090"
+    ],
+    "member_count": 1,
+    "max_members": 500
+  },
+  "room_e481472ffca1": {
+    "id": "room_e481472ffca1",
+    "name": "测试房间 3",
+    "owner_id": "fd22e996d17fe59f",
+    "created_at": 1771642244.9959543,
+    "is_public": true,
+    "members": [
+      "fd22e996d17fe59f"
+    ],
+    "member_count": 1,
+    "max_members": 500
+  },
+  "room_fa42456e66ae": {
+    "id": "room_fa42456e66ae",
+    "name": "测试房间_1771642284",
+    "owner_id": "2029456b93dd55ad",
+    "created_at": 1771642284.4925215,
+    "is_public": true,
+    "members": [],
+    "member_count": 0,
+    "max_members": 500
+  }
+}

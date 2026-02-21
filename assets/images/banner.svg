@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="1920" height="640" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0a0a0f"/>
+      <stop offset="30%" style="stop-color:#1a1a2e"/>
+      <stop offset="60%" style="stop-color:#16213e"/>
+      <stop offset="100%" style="stop-color:#0f3460"/>
+    </linearGradient>
+    <linearGradient id="accent1" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#00d9ff"/>
+      <stop offset="30%" style="stop-color:#00ff88"/>
+      <stop offset="70%" style="stop-color:#a2d2ff"/>
+      <stop offset="100%" style="stop-color:#e94560"/>
+    </linearGradient>
+    <filter id="glow1">
+      <feGaussianBlur stdDeviation="6" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    <radialGradient id="nexus1" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" style="stop-color:#00d9ff;stop-opacity:0.35"/>
+      <stop offset="40%" style="stop-color:#00ff88;stop-opacity:0.2"/>
+      <stop offset="100%" style="stop-color:#0a0a0f;stop-opacity:0"/>
+    </radialGradient>
+    <linearGradient id="textGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#00d9ff"/>
+      <stop offset="50%" style="stop-color:#00ff88"/>
+      <stop offset="100%" style="stop-color:#a2d2ff"/>
+    </linearGradient>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="1920" height="640" fill="url(#bg1)"/>
+  
+  <!-- Nexus Clouds -->
+  <ellipse cx="300" cy="320" rx="400" ry="250" fill="url(#nexus1)"/>
+  <ellipse cx="960" cy="300" rx="500" ry="300" fill="url(#nexus1)"/>
+  <ellipse cx="1600" cy="340" rx="450" ry="280" fill="url(#nexus1)"/>
+  
+  <!-- Connection Lines (Network Pattern) -->
+  <g stroke="#00d9ff" stroke-width="1" opacity="0.3">
+    <line x1="200" y1="150" x2="400" y2="200"/>
+    <line x1="400" y1="200" x2="600" y2="180"/>
+    <line x1="600" y1="180" x2="800" y2="220"/>
+    <line x1="800" y1="220" x2="1000" y2="190"/>
+    <line x1="1000" y1="190" x2="1200" y2="210"/>
+    <line x1="1200" y1="210" x2="1400" y2="180"/>
+    <line x1="1400" y1="180" x2="1600" y2="200"/>
+    <line x1="1600" y1="200" x2="1800" y2="170"/>
+    
+    <line x1="250" y1="450" x2="450" y2="480"/>
+    <line x1="450" y1="480" x2="650" y2="460"/>
+    <line x1="650" y1="460" x2="850" y2="490"/>
+    <line x1="850" y1="490" x2="1050" y2="470"/>
+    <line x1="1050" y1="470" x2="1250" y2="485"/>
+    <line x1="1250" y1="485" x2="1450" y2="465"/>
+    <line x1="1450" y1="465" x2="1650" y2="480"/>
+    
+    <line x1="300" y1="300" x2="500" y2="350"/>
+    <line x1="500" y1="350" x2="700" y2="320"/>
+    <line x1="700" y1="320" x2="900" y2="360"/>
+    <line x1="900" y1="360" x2="1100" y2="340"/>
+    <line x1="1100" y1="340" x2="1300" y2="355"/>
+    <line x1="1300" y1="355" x2="1500" y2="330"/>
+  </g>
+  
+  <!-- Network Nodes -->
+  <g fill="#00ff88">
+    <circle cx="200" cy="150" r="4" opacity="0.9"/>
+    <circle cx="400" cy="200" r="3" opacity="0.8"/>
+    <circle cx="600" cy="180" r="4" opacity="0.9"/>
+    <circle cx="800" cy="220" r="3" opacity="0.7"/>
+    <circle cx="1000" cy="190" r="4" opacity="0.8"/>
+    <circle cx="1200" cy="210" r="3" opacity="0.9"/>
+    <circle cx="1400" cy="180" r="4" opacity="0.7"/>
+    <circle cx="1600" cy="200" r="3" opacity="0.8"/>
+    <circle cx="1800" cy="170" r="4" opacity="0.9"/>
+    
+    <circle cx="250" cy="450" r="3" opacity="0.8"/>
+    <circle cx="450" cy="480" r="4" opacity="0.9"/>
+    <circle cx="650" cy="460" r="3" opacity="0.7"/>
+    <circle cx="850" cy="490" r="4" opacity="0.8"/>
+    <circle cx="1050" cy="470" r="3" opacity="0.9"/>
+    <circle cx="1250" cy="485" r="4" opacity="0.7"/>
+    <circle cx="1450" cy="465" r="3" opacity="0.8"/>
+    <circle cx="1650" cy="480" r="4" opacity="0.9"/>
+  </g>
+  
+  <!-- Stars -->
+  <g fill="#ffffff">
+    <circle cx="150" cy="80" r="2" opacity="0.9"/>
+    <circle cx="300" cy="120" r="1.5" opacity="0.7"/>
+    <circle cx="450" cy="60" r="2.5" opacity="0.8"/>
+    <circle cx="600" cy="100" r="1" opacity="0.6"/>
+    <circle cx="750" cy="70" r="2" opacity="0.9"/>
+    <circle cx="900" cy="110" r="1.5" opacity="0.7"/>
+    <circle cx="1050" cy="50" r="2" opacity="0.8"/>
+    <circle cx="1200" cy="90" r="1" opacity="0.6"/>
+    <circle cx="1350" cy="65" r="2.5" opacity="0.9"/>
+    <circle cx="1500" cy="105" r="1.5" opacity="0.7"/>
+    <circle cx="1650" cy="75" r="2" opacity="0.8"/>
+    <circle cx="1800" cy="95" r="1" opacity="0.6"/>
+  </g>
+  
+  <!-- Icon / Logo -->
+  <g transform="translate(960, 140)" filter="url(#glow1)">
+    <circle cx="0" cy="0" r="50" fill="none" stroke="url(#accent1)" stroke-width="3"/>
+    <circle cx="0" cy="0" r="35" fill="none" stroke="url(#accent1)" stroke-width="2" opacity="0.7"/>
+    <circle cx="0" cy="0" r="20" fill="url(#accent1)" opacity="0.3"/>
+    <path d="M -25 0 L 25 0 M 0 -25 L 0 25" stroke="url(#accent1)" stroke-width="2"/>
+    <circle cx="-25" cy="0" r="4" fill="#00ff88"/>
+    <circle cx="25" cy="0" r="4" fill="#00d9ff"/>
+    <circle cx="0" cy="-25" r="4" fill="#a2d2ff"/>
+    <circle cx="0" cy="25" r="4" fill="#e94560"/>
+  </g>
+  
+  <!-- Title -->
+  <text x="960" y="260" font-family="Arial, sans-serif" font-size="72" font-weight="bold" 
+        fill="url(#textGradient)" text-anchor="middle" filter="url(#glow1)" 
+        letter-spacing="4">⚡ NexusChat</text>
+  
+  <!-- Subtitle -->
+  <text x="960" y="320" font-family="Arial, sans-serif" font-size="28" fill="#a2d2ff" 
+        text-anchor="middle" letter-spacing="2">新一代轻量级聊天服务器框架</text>
+  
+  <!-- Tagline -->
+  <text x="960" y="360" font-family="Arial, sans-serif" font-size="20" fill="#00ff88" 
+        text-anchor="middle" letter-spacing="1" opacity="0.9">零依赖 · 一键部署 · 高性能异步 · 类 XMPP 协议</text>
+  
+  <!-- Accent Line -->
+  <rect x="560" y="390" width="800" height="3" fill="url(#accent1)" rx="1.5" opacity="0.8"/>
+  
+  <!-- Bottom decoration -->
+  <rect x="0" y="630" width="1920" height="10" fill="url(#accent1)" opacity="0.4"/>
+  
+  <!-- Version Badge -->
+  <g transform="translate(1720, 580)">
+    <rect x="0" y="0" width="120" height="32" rx="4" fill="#1a1a2e" stroke="url(#accent1)" stroke-width="1.5"/>
+    <text x="60" y="22" font-family="Arial, sans-serif" font-size="14" fill="#00ff88" text-anchor="middle" font-weight="bold">v1.0.0</text>
+  </g>
+</svg>

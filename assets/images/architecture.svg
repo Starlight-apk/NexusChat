@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="1920" height="1080" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0a0a0f"/>
+      <stop offset="100%" style="stop-color:#16213e"/>
+    </linearGradient>
+    <linearGradient id="primary" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#00d9ff"/>
+      <stop offset="50%" style="stop-color:#00ff88"/>
+      <stop offset="100%" style="stop-color:#a2d2ff"/>
+    </linearGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  
+  <rect width="1920" height="1080" fill="url(#bg)"/>
+  
+  <!-- Title -->
+  <text x="960" y="80" font-size="36" font-weight="bold" fill="url(#primary)" text-anchor="middle">🏗️ NexusChat 架构设计</text>
+  
+  <!-- Layer 1: Client Layer -->
+  <g transform="translate(460, 120)">
+    <rect x="0" y="0" width="1000" height="120" rx="12" fill="#1a1a2e" stroke="#00d9ff" stroke-width="2" filter="url(#glow)"/>
+    <text x="500" y="40" font-size="24" font-weight="bold" fill="#00d9ff" text-anchor="middle">📱 客户端层 Client Layer</text>
+    <text x="500" y="75" font-size="16" fill="#a2d2ff" text-anchor="middle">Web 客户端 · 移动应用 · 桌面客户端 · CLI 工具 · 第三方集成</text>
+  </g>
+  
+  <!-- Connection -->
+  <path d="M 960 240 L 960 280" stroke="#00ff88" stroke-width="3" stroke-dasharray="5,5"/>
+  
+  <!-- Layer 2: Protocol Layer -->
+  <g transform="translate(460, 280)">
+    <rect x="0" y="0" width="1000" height="120" rx="12" fill="#1a1a2e" stroke="#00ff88" stroke-width="2" filter="url(#glow)"/>
+    <text x="500" y="40" font-size="24" font-weight="bold" fill="#00ff88" text-anchor="middle">📡 协议层 Protocol Layer</text>
+    <text x="500" y="75" font-size="16" fill="#a2d2ff" text-anchor="middle">JSON 行协议 · 消息编码/解码 · 认证协议 · 房间协议 · 状态同步</text>
+  </g>
+  
+  <!-- Connection -->
+  <path d="M 960 400 L 960 440" stroke="#a2d2ff" stroke-width="3" stroke-dasharray="5,5"/>
+  
+  <!-- Layer 3: Core Layer -->
+  <g transform="translate(360, 440)">
+    <rect x="0" y="0" width="1200" height="200" rx="12" fill="#16213e" stroke="#a2d2ff" stroke-width="3" filter="url(#glow)"/>
+    <text x="600" y="40" font-size="24" font-weight="bold" fill="#a2d2ff" text-anchor="middle">⚙️ 核心服务层 Core Services</text>
+    
+    <!-- Core Modules -->
+    <g transform="translate(50, 70)">
+      <rect x="0" y="0" width="260" height="100" rx="8" fill="#1a1a2e" stroke="#00d9ff" stroke-width="1.5"/>
+      <text x="130" y="35" font-size="18" font-weight="bold" fill="#00d9ff" text-anchor="middle">🔐 认证服务</text>
+      <text x="130" y="65" font-size="14" fill="#8892b0" text-anchor="middle">用户注册 / 登录</text>
+      <text x="130" y="90" font-size="14" fill="#8892b0" text-anchor="middle">会话管理 / JWT</text>
+    </g>
+    
+    <g transform="translate(330, 70)">
+      <rect x="0" y="0" width="260" height="100" rx="8" fill="#1a1a2e" stroke="#00ff88" stroke-width="1.5"/>
+      <text x="130" y="35" font-size="18" font-weight="bold" fill="#00ff88" text-anchor="middle">💬 消息服务</text>
+      <text x="130" y="65" font-size="14" fill="#8892b0" text-anchor="middle">私聊路由 / 群聊广播</text>
+      <text x="130" y="90" font-size="14" fill="#8892b0" text-anchor="middle">离线消息 / 历史记录</text>
+    </g>
+    
+    <g transform="translate(610, 70)">
+      <rect x="0" y="0" width="260" height="100" rx="8" fill="#1a1a2e" stroke="#e94560" stroke-width="1.5"/>
+      <text x="130" y="35" font-size="18" font-weight="bold" fill="#e94560" text-anchor="middle">🏠 房间服务</text>
+      <text x="130" y="65" font-size="14" fill="#8892b0" text-anchor="middle">房间创建 / 加入 / 离开</text>
+      <text x="130" y="90" font-size="14" fill="#8892b0" text-anchor="middle">成员管理 / 权限</text>
+    </g>
+    
+    <g transform="translate(890, 70)">
+      <rect x="0" y="0" width="260" height="100" rx="8" fill="#1a1a2e" stroke="#ffd700" stroke-width="1.5"/>
+      <text x="130" y="35" font-size="18" font-weight="bold" fill="#ffd700" text-anchor="middle">💾 存储服务</text>
+      <text x="130" y="65" font-size="14" fill="#8892b0" text-anchor="middle">JSON 文件 / SQLite</text>
+      <text x="130" y="90" font-size="14" fill="#8892b0" text-anchor="middle">数据持久化 / 缓存</text>
+    </g>
+  </g>
+  
+  <!-- Connection -->
+  <path d="M 960 640 L 960 680" stroke="#e94560" stroke-width="3" stroke-dasharray="5,5"/>
+  
+  <!-- Layer 4: Infrastructure -->
+  <g transform="translate(360, 680)">
+    <rect x="0" y="0" width="1200" height="150" rx="12" fill="#0f3460" stroke="#e94560" stroke-width="2"/>
+    <text x="600" y="40" font-size="24" font-weight="bold" fill="#e94560" text-anchor="middle">🔧 基础设施层 Infrastructure</text>
+    
+    <g transform="translate(100, 70)">
+      <text x="0" y="0" font-size="16" fill="#8892b0">• asyncio 异步 IO</text>
+      <text x="300" y="0" font-size="16" fill="#8892b0">• TCP/WebSocket 服务器</text>
+      <text x="600" y="0" font-size="16" fill="#8892b0">• TLS/SSL 加密</text>
+      <text x="900" y="0" font-size="16" fill="#8892b0">• 日志系统</text>
+      <text x="0" y="40" font-size="16" fill="#8892b0">• 配置管理</text>
+      <text x="300" y="40" font-size="16" fill="#8892b0">• 错误处理</text>
+      <text x="600" y="40" font-size="16" fill="#8892b0">• 性能监控</text>
+      <text x="900" y="40" font-size="16" fill="#8892b0">• 热重载</text>
+    </g>
+  </g>
+  
+  <!-- Connection -->
+  <path d="M 960 830 L 960 870" stroke="#ffd700" stroke-width="3" stroke-dasharray="5,5"/>
+  
+  <!-- Layer 5: Storage -->
+  <g transform="translate(460, 870)">
+    <rect x="0" y="0" width="1000" height="120" rx="12" fill="#0a0a0f" stroke="#ffd700" stroke-width="2"/>
+    <text x="500" y="40" font-size="24" font-weight="bold" fill="#ffd700" text-anchor="middle">💾 数据存储层 Storage Layer</text>
+    <text x="500" y="75" font-size="16" fill="#a2d2ff" text-anchor="middle">用户数据 · 消息历史 · 房间信息 · 配置文件 · 日志文件</text>
+  </g>
+  
+  <!-- Decorative -->
+  <circle cx="100" cy="540" r="40" fill="url(#primary)" opacity="0.1"/>
+  <circle cx="1820" cy="540" r="50" fill="url(#primary)" opacity="0.1"/>
+</svg>

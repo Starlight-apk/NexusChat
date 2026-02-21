@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="1920" height="1080" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0a0a0f"/>
+      <stop offset="100%" style="stop-color:#16213e"/>
+    </linearGradient>
+    <linearGradient id="primary" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#00d9ff"/>
+      <stop offset="50%" style="stop-color:#00ff88"/>
+      <stop offset="100%" style="stop-color:#a2d2ff"/>
+    </linearGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="4" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  
+  <rect width="1920" height="1080" fill="url(#bg)"/>
+  
+  <!-- Feature Cards -->
+  <g transform="translate(160, 150)">
+    <!-- Card 1 -->
+    <g>
+      <rect x="0" y="0" width="480" height="280" rx="16" fill="#1a1a2e" stroke="url(#primary)" stroke-width="2" opacity="0.9"/>
+      <text x="240" y="60" font-size="48" text-anchor="middle" fill="#00ff88">🚀</text>
+      <text x="240" y="110" font-size="28" font-weight="bold" fill="url(#primary)" text-anchor="middle">零依赖运行</text>
+      <text x="240" y="160" font-size="18" fill="#a2d2ff" text-anchor="middle">核心功能仅使用 Python 标准库</text>
+      <text x="240" y="200" font-size="16" fill="#8892b0" text-anchor="middle">无需安装复杂依赖</text>
+      <text x="240" y="230" font-size="16" fill="#8892b0" text-anchor="middle">开箱即用</text>
+    </g>
+    
+    <!-- Card 2 -->
+    <g transform="translate(540, 0)">
+      <rect x="0" y="0" width="480" height="280" rx="16" fill="#1a1a2e" stroke="url(#primary)" stroke-width="2" opacity="0.9"/>
+      <text x="240" y="60" font-size="48" text-anchor="middle" fill="#00d9ff">⚡</text>
+      <text x="240" y="110" font-size="28" font-weight="bold" fill="url(#primary)" text-anchor="middle">高性能异步</text>
+      <text x="240" y="160" font-size="18" fill="#a2d2ff" text-anchor="middle">基于 asyncio 异步 IO</text>
+      <text x="240" y="200" font-size="16" fill="#8892b0" text-anchor="middle">单线程处理数千并发</text>
+      <text x="240" y="230" font-size="16" fill="#8892b0" text-anchor="middle">低延迟高吞吐</text>
+    </g>
+    
+    <!-- Card 3 -->
+    <g transform="translate(1080, 0)">
+      <rect x="0" y="0" width="480" height="280" rx="16" fill="#1a1a2e" stroke="url(#primary)" stroke-width="2" opacity="0.9"/>
+      <text x="240" y="60" font-size="48" text-anchor="middle" fill="#a2d2ff">📦</text>
+      <text x="240" y="110" font-size="28" font-weight="bold" fill="url(#primary)" text-anchor="middle">一键部署</text>
+      <text x="240" y="160" font-size="18" fill="#a2d2ff" text-anchor="middle">完整部署脚本</text>
+      <text x="240" y="200" font-size="16" fill="#8892b0" text-anchor="middle">Docker / Docker Compose</text>
+      <text x="240" y="230" font-size="16" fill="#8892b0" text-anchor="middle">systemd 服务</text>
+    </g>
+  </g>
+  
+  <!-- Second Row -->
+  <g transform="translate(160, 480)">
+    <!-- Card 4 -->
+    <g>
+      <rect x="0" y="0" width="480" height="280" rx="16" fill="#1a1a2e" stroke="url(#primary)" stroke-width="2" opacity="0.9"/>
+      <text x="240" y="60" font-size="48" text-anchor="middle" fill="#e94560">💬</text>
+      <text x="240" y="110" font-size="28" font-weight="bold" fill="url(#primary)" text-anchor="middle">完整功能</text>
+      <text x="240" y="160" font-size="18" fill="#a2d2ff" text-anchor="middle">私聊 / 群聊 / 房间</text>
+      <text x="240" y="200" font-size="16" fill="#8892b0" text-anchor="middle">离线消息存储</text>
+      <text x="240" y="230" font-size="16" fill="#8892b0" text-anchor="middle">消息历史记录</text>
+    </g>
+    
+    <!-- Card 5 -->
+    <g transform="translate(540, 0)">
+      <rect x="0" y="0" width="480" height="280" rx="16" fill="#1a1a2e" stroke="url(#primary)" stroke-width="2" opacity="0.9"/>
+      <text x="240" y="60" font-size="48" text-anchor="middle" fill="#ffd700">🔒</text>
+      <text x="240" y="110" font-size="28" font-weight="bold" fill="url(#primary)" text-anchor="middle">安全认证</text>
+      <text x="240" y="160" font-size="18" fill="#a2d2ff" text-anchor="middle">密码哈希加密</text>
+      <text x="240" y="200" font-size="16" fill="#8892b0" text-anchor="middle">可选 bcrypt 支持</text>
+      <text x="240" y="230" font-size="16" fill="#8892b0" text-anchor="middle">会话管理</text>
+    </g>
+    
+    <!-- Card 6 -->
+    <g transform="translate(1080, 0)">
+      <rect x="0" y="0" width="480" height="280" rx="16" fill="#1a1a2e" stroke="url(#primary)" stroke-width="2" opacity="0.9"/>
+      <text x="240" y="60" font-size="48" text-anchor="middle" fill="#ff6b9d">🛠️</text>
+      <text x="240" y="110" font-size="28" font-weight="bold" fill="url(#primary)" text-anchor="middle">易扩展</text>
+      <text x="240" y="160" font-size="18" fill="#a2d2ff" text-anchor="middle">模块化设计</text>
+      <text x="240" y="200" font-size="16" fill="#8892b0" text-anchor="middle">插件系统</text>
+      <text x="240" y="230" font-size="16" fill="#8892b0" text-anchor="middle">自定义存储后端</text>
+    </g>
+  </g>
+  
+  <!-- Protocol Section -->
+  <g transform="translate(160, 820)">
+    <rect x="0" y="0" width="1600" height="200" rx="16" fill="#1a1a2e" stroke="url(#primary)" stroke-width="2" opacity="0.8"/>
+    <text x="800" y="50" font-size="24" font-weight="bold" fill="url(#primary)" text-anchor="middle">📡 类 XMPP 协议 - 简洁的 JSON 行协议</text>
+    
+    <!-- Protocol Example -->
+    <rect x="100" y="80" width="1400" height="100" rx="8" fill="#0a0a0f" opacity="0.8"/>
+    <text x="140" y="115" font-family="monospace" font-size="14" fill="#00ff88">{"type": "message", "to": "user123", "content": "Hello!", "timestamp": 1234567890}</text>
+    <text x="140" y="145" font-family="monospace" font-size="14" fill="#00d9ff">{"type": "room_message", "room_id": "room_001", "content": "Hi all!"}</text>
+    <text x="140" y="175" font-family="monospace" font-size="14" fill="#a2d2ff">{"type": "ping"} → {"type": "pong", "timestamp": 1234567890}</text>
+  </g>
+  
+  <!-- Decorative Elements -->
+  <circle cx="1800" cy="100" r="60" fill="url(#primary)" opacity="0.1"/>
+  <circle cx="100" cy="1000" r="80" fill="url(#primary)" opacity="0.1"/>
+</svg>

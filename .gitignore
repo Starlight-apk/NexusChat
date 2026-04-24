@@ -1,59 +1,36 @@
-# NexusChat .gitignore
-
-# Python
+```
+# Compiled Python files
+*.pyc
 __pycache__/
-*.py[cod]
-*$py.class
-*.so
-.Python
-build/
-develop-eggs/
-dist/
-downloads/
-eggs/
-.eggs/
-lib/
-lib64/
-parts/
-sdist/
-var/
-wheels/
-*.egg-info/
-.installed.cfg
-*.egg
 
-# 虚拟环境
+# Dependencies
 venv/
-env/
-ENV/
-.venv
+.venv/
+.env
+.env.local
+*.env.*
 
-# IDE
-.idea/
-.vscode/
-*.swp
-*.swo
-*~
+# Logs
+*.log
 
-# 数据文件（可选，生产环境应保留）
-# data/*.json
-
-# 日志
-logs/*.log
-logs/*.log.*
-
-# PID 文件
-*.pid
-
-# 测试
-.pytest_cache/
+# Coverage reports
 .coverage
 htmlcov/
+coverage/
 
-# OS
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*.tmp
+
+# OS files
 .DS_Store
 Thumbs.db
 
-# 部署
-*.tar.gz
-*.zip
+# Build artifacts
+dist/
+build/
+target/
+```

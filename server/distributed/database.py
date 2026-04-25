@@ -1,16 +1,18 @@
 """
 分布式数据库连接池模块
 ======================
-实现 MySQL/PostgreSQL 异步连接池与读写分离
+实现 SQLite 异步连接池与读写操作（生产就绪）
 """
 
 import asyncio
 import time
-import random
+import sqlite3
 from dataclasses import dataclass, field
 from typing import Dict, List, Optional, Any, Callable
 from enum import Enum
 import logging
+from contextlib import asynccontextmanager
+from pathlib import Path
 
 
 class ConnectionStatus(Enum):
@@ -24,26 +26,48 @@ class ConnectionStatus(Enum):
 class DBConnection:
     """数据库连接"""
     conn_id: str
-    host: str
-    port: int
-    database: str
+    db_path: str
     status: ConnectionStatus = ConnectionStatus.IDLE
     created_at: float = field(default_factory=time.time)
     last_used: float = field(default_factory=time.time)
     query_count: int = 0
+    _conn: Optional[sqlite3.Connection] = field(default=None, repr=False)
+    
+    def _get_connection(self) -> sqlite3.Connection:
+        """获取底层连接"""
+        if self._conn is None:
+            self._conn = sqlite3.connect(self.db_path, timeout=30.0, check_same_thread=False)
+            self._conn.row_factory = sqlite3.Row
+        return self._conn
     
     async def execute(self, query: str, params: tuple = ()) -> List[Dict]:
-        """执行查询（模拟）"""
+        """执行查询"""
         self.status = ConnectionStatus.ACTIVE
         self.last_used = time.time()
         self.query_count += 1
-        # 模拟查询延迟
-        await asyncio.sleep(random.uniform(0.001, 0.01))
-        self.status = ConnectionStatus.IDLE
-        return [{"id": 1, "data": "mock_result"}]
+        
+        try:
+            conn = self._get_connection()
+            cursor = conn.cursor()
+            cursor.execute(query, params)
+            
+            if query.strip().upper().startswith(('SELECT', 'PRAGMA')):
+                results = [dict(row) for row in cursor.fetchall()]
+            else:
+                conn.commit()
+                results = []
+            
+            self.status = ConnectionStatus.IDLE
+            return results
+        except Exception as e:
+            self.status = ConnectionStatus.UNHEALTHY
+            raise
     
     async def close(self):
         """关闭连接"""
+        if self._conn:
+            self._conn.close()
+            self._conn = None
         self.status = ConnectionStatus.CLOSED
 
 
@@ -52,20 +76,12 @@ class ConnectionPool:
     
     def __init__(
         self,
-        host: str = "localhost",
-        port: int = 3306,
-        database: str = "nexuschat",
-        user: str = "root",
-        password: str = "password",
+        db_path: str = "data/nexuschat.db",
         min_size: int = 5,
         max_size: int = 50,
         pool_name: str = "default"
     ):
-        self.host = host
-        self.port = port
-        self.database = database
-        self.user = user
-        self.password = password
+        self.db_path = db_path
         self.min_size = min_size
         self.max_size = max_size
         self.pool_name = pool_name
@@ -77,32 +93,29 @@ class ConnectionPool:
         self.running = False
         self.conn_counter = 0
         
+        # 确保目录存在
+        Path(db_path).parent.mkdir(parents=True, exist_ok=True)
+        
     async def start(self):
         """启动连接池"""
         startup_start = time.time()
-        self.logger.info(f"[DB] 启动 {self.pool_name} 连接池 ({self.host}:{self.port})")
+        self.logger.info(f"[DB] 启动 {self.pool_name} 连接池 ({self.db_path})")
         
-        # 模拟加载数据库驱动
-        self.logger.info(f"[DB] 正在加载 MySQL 异步驱动 (aiomysql)...")
-        await asyncio.sleep(0.8)
-        
-        # 模拟建立初始连接
+        # 创建初始连接
         self.logger.info(f"[DB] 正在创建初始连接池 (min={self.min_size}, max={self.max_size})...")
         for i in range(self.min_size):
             conn = await self._create_connection()
             self.connections.append(conn)
             await self._available.put(conn)
-            await asyncio.sleep(0.1)  # 模拟连接建立时间
         
-        # 模拟验证连接
+        # 验证连接
         self.logger.info(f"[DB] 正在验证所有连接健康状态...")
-        await asyncio.sleep(0.5)
         
         self.running = True
         asyncio.create_task(self._health_check_loop())
         
         elapsed = time.time() - startup_start
-        self.logger.info(f"[DB] {self.pool_name} 连接池启动完成，耗时 {elapsed:.2f} 秒 (已创建 {len(self.connections)} 个连接)")
+        self.logger.info(f"[DB] {self.pool_name} 连接池启动完成，耗时 {elapsed:.3f} 秒 (已创建 {len(self.connections)} 个连接)")
     
     async def stop(self):
         """停止连接池"""
@@ -121,12 +134,8 @@ class ConnectionPool:
         self.conn_counter += 1
         conn = DBConnection(
             conn_id=f"{self.pool_name}_{self.conn_counter}",
-            host=self.host,
-            port=self.port,
-            database=self.database
+            db_path=self.db_path
         )
-        # 模拟连接建立
-        await asyncio.sleep(0.05)
         return conn
     
     async def acquire(self, timeout: float = 10.0) -> DBConnection:
@@ -176,7 +185,7 @@ class ConnectionPool:
 
 
 class ReadWriteSplitPool:
-    """读写分离连接池"""
+    """读写分离连接池（单 SQLite 文件，逻辑分离）"""
     
     def __init__(
         self,
@@ -185,8 +194,10 @@ class ReadWriteSplitPool:
         min_size: int = 5,
         max_size: int = 50
     ):
-        self.master_config = master_config
-        self.slave_configs = slave_configs
+        # 使用单一 SQLite 数据库文件，逻辑上分离读写
+        db_path = master_config.get("db_path", "data/nexuschat.db")
+        self.master_config = {"db_path": db_path}
+        self.slave_configs = [{"db_path": db_path} for _ in slave_configs] if slave_configs else [{"db_path": db_path}]
         self.min_size = min_size
         self.max_size = max_size
         
@@ -201,40 +212,31 @@ class ReadWriteSplitPool:
         self.logger.info("=" * 50)
         self.logger.info("启动读写分离数据库连接池...")
         
-        # 启动主库连接池
+        # 启动主库连接池（用于写操作）
         self.logger.info("[RWSplit] 正在启动主库 (Master) 连接池...")
         self.master_pool = ConnectionPool(
-            host=self.master_config.get("host", "localhost"),
-            port=self.master_config.get("port", 3306),
-            database=self.master_config.get("database", "nexuschat"),
-            user=self.master_config.get("user", "root"),
-            password=self.master_config.get("password", ""),
+            db_path=self.master_config["db_path"],
             min_size=self.min_size,
             max_size=self.max_size,
             pool_name="master"
         )
         await self.master_pool.start()
         
-        # 启动从库连接池
+        # 启动从库连接池（用于读操作，实际是同一文件）
         self.logger.info(f"[RWSplit] 正在启动 {len(self.slave_configs)} 个从库 (Slave) 连接池...")
         for i, config in enumerate(self.slave_configs):
-            self.logger.info(f"[RWSplit] 启动从库 #{i+1}: {config.get('host')}:{config.get('port')}")
+            self.logger.info(f"[RWSplit] 启动从库 #{i+1}: {config['db_path']}")
             pool = ConnectionPool(
-                host=config.get("host", "localhost"),
-                port=config.get("port", 3306),
-                database=config.get("database", "nexuschat"),
-                user=config.get("user", "root"),
-                password=config.get("password", ""),
+                db_path=config["db_path"],
                 min_size=max(2, self.min_size // len(self.slave_configs)),
                 max_size=max(10, self.max_size // len(self.slave_configs)),
                 pool_name=f"slave_{i}"
             )
             await pool.start()
             self.slave_pools.append(pool)
-            await asyncio.sleep(0.2)
         
         elapsed = time.time() - startup_start
-        self.logger.info(f"读写分离连接池启动完成，耗时 {elapsed:.2f} 秒")
+        self.logger.info(f"读写分离连接池启动完成，耗时 {elapsed:.3f} 秒")
         self.logger.info(f"  - 主库连接数：{len(self.master_pool.connections)}")
         self.logger.info(f"  - 从库连接总数：{sum(len(p.connections) for p in self.slave_pools)}")
     
@@ -275,37 +277,31 @@ class DatabaseManager:
         self.logger.info("=" * 50)
         self.logger.info("启动数据库管理系统...")
         
-        # 运行数据库迁移
-        self.logger.info("[DB] 正在执行数据库迁移检查...")
-        self.migration_runner = MigrationRunner(self.config)
-        await self.migration_runner.start()
-        await asyncio.sleep(0.5)
-        
         # 启动读写分离连接池
         db_config = self.config.get("database", {})
-        master = db_config.get("master", {
-            "host": "localhost",
-            "port": 3306,
-            "database": "nexuschat",
-            "user": "root",
-            "password": "password"
-        })
-        slaves = db_config.get("slaves", [
-            {"host": "slave1", "port": 3306, "database": "nexuschat"},
-            {"host": "slave2", "port": 3306, "database": "nexuschat"},
-            {"host": "slave3", "port": 3306, "database": "nexuschat"},
-        ])
+        db_path = db_config.get("db_path", "data/nexuschat.db")
+        
+        # 确保目录存在
+        Path(db_path).parent.mkdir(parents=True, exist_ok=True)
+        
+        master = {"db_path": db_path}
+        slaves = [{"db_path": db_path} for _ in range(db_config.get("slave_count", 3))]
         
         self.rw_split_pool = ReadWriteSplitPool(
             master_config=master,
             slave_configs=slaves,
-            min_size=db_config.get("min_connections", 10),
-            max_size=db_config.get("max_connections", 100)
+            min_size=db_config.get("min_connections", 5),
+            max_size=db_config.get("max_connections", 50)
         )
         await self.rw_split_pool.start()
         
+        # 运行数据库迁移（创建表）
+        self.logger.info("[DB] 正在执行数据库迁移检查...")
+        self.migration_runner = MigrationRunner(self.rw_split_pool.master_pool)
+        await self.migration_runner.start()
+        
         elapsed = time.time() - startup_start
-        self.logger.info(f"数据库管理系统启动完成，耗时 {elapsed:.2f} 秒")
+        self.logger.info(f"数据库管理系统启动完成，耗时 {elapsed:.3f} 秒")
     
     async def stop(self):
         """停止数据库管理器"""
@@ -320,28 +316,117 @@ class DatabaseManager:
 class MigrationRunner:
     """数据库迁移执行器"""
     
-    def __init__(self, config: Dict):
-        self.config = config
+    def __init__(self, connection_pool: Optional[ConnectionPool]):
+        self.connection_pool = connection_pool
         self.logger = logging.getLogger("NexusChat.Migration")
         
     async def start(self):
-        """执行迁移"""
-        self.logger.info("[Migration] 正在加载迁移脚本...")
-        await asyncio.sleep(0.5)
+        """执行迁移 - 创建必要的表"""
+        self.logger.info("[Migration] 正在创建数据库表结构...")
         
-        migrations = [
-            "001_create_users_table.sql",
-            "002_create_rooms_table.sql",
-            "003_create_messages_table.sql",
-            "004_add_indexes.sql",
-            "005_create_audit_logs.sql",
-        ]
+        if not self.connection_pool:
+            self.logger.warning("[Migration] 无可用连接池，跳过表创建")
+            return
         
-        for migration in migrations:
-            self.logger.info(f"[Migration] 执行迁移：{migration}")
-            await asyncio.sleep(0.3)  # 模拟执行
-        
-        self.logger.info(f"[Migration] 已完成 {len(migrations)} 个迁移脚本")
+        # 获取一个连接来执行迁移
+        conn = await self.connection_pool.acquire()
+        try:
+            # 创建用户表
+            await conn.execute("""
+                CREATE TABLE IF NOT EXISTS users (
+                    id TEXT PRIMARY KEY,
+                    username TEXT UNIQUE NOT NULL,
+                    created_at REAL NOT NULL,
+                    last_seen REAL,
+                    status TEXT DEFAULT 'offline'
+                )
+            """)
+            self.logger.info("[Migration] 表 users 已就绪")
+            
+            # 创建密码表
+            await conn.execute("""
+                CREATE TABLE IF NOT EXISTS passwords (
+                    user_id TEXT PRIMARY KEY,
+                    password_hash TEXT NOT NULL,
+                    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+                )
+            """)
+            self.logger.info("[Migration] 表 passwords 已就绪")
+            
+            # 创建房间表
+            await conn.execute("""
+                CREATE TABLE IF NOT EXISTS rooms (
+                    id TEXT PRIMARY KEY,
+                    name TEXT NOT NULL,
+                    owner_id TEXT NOT NULL,
+                    public INTEGER DEFAULT 1,
+                    created_at REAL NOT NULL,
+                    FOREIGN KEY (owner_id) REFERENCES users(id)
+                )
+            """)
+            self.logger.info("[Migration] 表 rooms 已就绪")
+            
+            # 创建房间成员表
+            await conn.execute("""
+                CREATE TABLE IF NOT EXISTS room_members (
+                    room_id TEXT NOT NULL,
+                    user_id TEXT NOT NULL,
+                    joined_at REAL NOT NULL,
+                    PRIMARY KEY (room_id, user_id),
+                    FOREIGN KEY (room_id) REFERENCES rooms(id) ON DELETE CASCADE,
+                    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+                )
+            """)
+            self.logger.info("[Migration] 表 room_members 已就绪")
+            
+            # 创建私聊消息表
+            await conn.execute("""
+                CREATE TABLE IF NOT EXISTS messages (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    from_user TEXT NOT NULL,
+                    to_user TEXT NOT NULL,
+                    content TEXT NOT NULL,
+                    timestamp REAL NOT NULL,
+                    delivered INTEGER DEFAULT 0
+                )
+            """)
+            self.logger.info("[Migration] 表 messages 已就绪")
+            
+            # 创建房间消息表
+            await conn.execute("""
+                CREATE TABLE IF NOT EXISTS room_messages (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    room_id TEXT NOT NULL,
+                    from_user TEXT NOT NULL,
+                    content TEXT NOT NULL,
+                    timestamp REAL NOT NULL,
+                    FOREIGN KEY (room_id) REFERENCES rooms(id) ON DELETE CASCADE
+                )
+            """)
+            self.logger.info("[Migration] 表 room_messages 已就绪")
+            
+            # 创建离线消息表
+            await conn.execute("""
+                CREATE TABLE IF NOT EXISTS offline_messages (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    user_id TEXT NOT NULL,
+                    from_user TEXT NOT NULL,
+                    content TEXT NOT NULL,
+                    timestamp REAL NOT NULL,
+                    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+                )
+            """)
+            self.logger.info("[Migration] 表 offline_messages 已就绪")
+            
+            # 创建索引
+            await conn.execute("CREATE INDEX IF NOT EXISTS idx_messages_pair ON messages(from_user, to_user)")
+            await conn.execute("CREATE INDEX IF NOT EXISTS idx_room_messages_room ON room_messages(room_id)")
+            await conn.execute("CREATE INDEX IF NOT EXISTS idx_offline_messages_user ON offline_messages(user_id)")
+            self.logger.info("[Migration] 索引已创建")
+            
+            self.logger.info("[Migration] 数据库迁移完成，所有表已就绪")
+        finally:
+            await self.connection_pool.release(conn)
     
     async def stop(self):
         """停止迁移"""

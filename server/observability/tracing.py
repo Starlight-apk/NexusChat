@@ -80,18 +80,8 @@ class DistributedTracer:
     async def start(self):
         """启动追踪器"""
         self.logger.info(f"[Tracing] 启动分布式追踪服务 (服务名：{self.service_name})")
-        await asyncio.sleep(0.5)  # 模拟初始化
         
-        # 模拟连接 Jaeger/Zipkin 后端
-        self.logger.info("[Tracing] 正在连接 Jaeger 后端...")
-        await asyncio.sleep(1.0)
-        
-        self.logger.info("[Tracing] 正在加载采样规则...")
-        await asyncio.sleep(0.8)
-        
-        self.logger.info("[Tracing] 正在初始化上下文传播器...")
-        await asyncio.sleep(0.5)
-        
+        # 初始化完成，无需模拟延迟
         self.running = True
         asyncio.create_task(self._export_loop())
         self.logger.info("[Tracing] 分布式追踪服务已启动")
@@ -152,11 +142,11 @@ class DistributedTracer:
     
     async def _export_batch(self):
         """批量导出"""
-        # 模拟导出到 Jaeger
+        # 导出到 Jaeger（实际实现时替换为真实 API 调用）
         completed = [s for s in self.spans.values() if s.end_time and s not in getattr(self, '_exported', set())]
         if completed:
-            self.logger.debug(f"[Tracing] 导出 {len(completed)} 个跨度到 Jaeger")
-            await asyncio.sleep(0.1)  # 模拟网络传输
+            self.logger.debug(f"[Tracing] 导出 {len(completed)} 个跨度到后端")
+            # 实际实现：发送 HTTP 请求到 Jaeger/Zipkin
             if not hasattr(self, '_exported'):
                 self._exported = set()
             self._exported.update(completed)
@@ -179,18 +169,13 @@ class MetricsCollector:
     async def start(self):
         """启动指标收集"""
         self.logger.info("[Metrics] 启动指标收集服务...")
-        await asyncio.sleep(0.5)
         
-        self.logger.info("[Metrics] 正在连接 Prometheus Exporter...")
-        await asyncio.sleep(0.8)
-        
-        self.logger.info("[Metrics] 正在注册默认指标...")
+        # 注册默认指标
         self._register_default_metrics()
-        await asyncio.sleep(0.5)
         
         self.running = True
         asyncio.create_task(self._collect_loop())
-        self.logger.info("[Metrics] 指标收集服务已启动 (98 个指标)")
+        self.logger.info("[Metrics] 指标收集服务已启动 (15 个核心指标)")
     
     async def stop(self):
         """停止指标收集"""
@@ -257,11 +242,8 @@ class DynamicLogger:
     async def start(self):
         """启动动态日志"""
         self.logger.info("[DynamicLogger] 启动动态日志级别控制...")
-        await asyncio.sleep(0.3)
         
-        self.logger.info("[DynamicLogger] 正在连接远程配置中心...")
-        await asyncio.sleep(0.5)
-        
+        # 初始化完成，无需连接远程配置
         self.logger.info("[DynamicLogger] 动态日志级别控制已启动")
     
     async def stop(self):

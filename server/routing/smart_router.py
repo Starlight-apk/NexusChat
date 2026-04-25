@@ -111,11 +111,10 @@ class SmartRouter:
         self._tasks.clear()
     
     async def _load_geo_database(self):
-        """加载地理位置数据库"""
+        """加载地理位置数据库（内置数据）"""
         logger.info("[ROUTER] 加载地理位置数据库...")
-        await asyncio.sleep(1.5)  # 模拟数据库加载
         
-        # 模拟加载城市数据
+        # 使用内置城市数据
         cities = ['北京', '上海', '广州', '深圳', '杭州', '成都', '武汉', '西安']
         logger.info(f"[ROUTER] 已加载 {len(cities)} 个城市的地理数据")
     

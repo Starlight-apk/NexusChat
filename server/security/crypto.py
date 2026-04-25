@@ -57,9 +57,6 @@ class CryptoManager:
         # 生成服务器密钥对
         await self._generate_server_keys()
         
-        # 加载 HSM (硬件安全模块) 模拟
-        await self._init_hsm()
-        
         logger.info(f"[CRYPTO] 加密管理器已就绪")
     
     async def stop(self):
@@ -71,9 +68,8 @@ class CryptoManager:
     async def _generate_server_keys(self):
         """生成服务器密钥对"""
         logger.info("[CRYPTO] 生成服务器密钥对...")
-        await asyncio.sleep(0.5)  # 模拟密钥生成时间
         
-        # 模拟生成密钥 (实际应使用密码学安全的随机数生成器)
+        # 使用密码学安全的随机数生成器生成密钥
         public_key = os.urandom(self.KEY_SIZE)
         private_key = os.urandom(self.KEY_SIZE)
         key_id = hashlib.sha256(public_key).hexdigest()[:16]
@@ -85,13 +81,6 @@ class CryptoManager:
         )
         
         logger.info(f"[CRYPTO] 服务器密钥对已生成 (ID: {key_id})")
-    
-    async def _init_hsm(self):
-        """初始化硬件安全模块 (模拟)"""
-        logger.info("[CRYPTO] 连接 HSM (硬件安全模块)...")
-        await asyncio.sleep(1.0)  # 模拟 HSM 连接延迟
-        
-        logger.info("[CRYPTO] HSM 已连接 (模拟模式)")
     
     def generate_user_keys(self, user_id: str) -> KeyPair:
         """为用户生成密钥对"""

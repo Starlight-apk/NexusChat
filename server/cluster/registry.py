@@ -80,11 +80,10 @@ class ServiceRegistry:
         self._tasks.clear()
     
     async def _load_remote_config(self):
-        """模拟从远程配置中心加载配置"""
-        logger.info("[REGISTRY] 从配置中心拉取配置...")
-        await asyncio.sleep(1.5)  # 模拟网络延迟
+        """从本地配置加载（无远程依赖）"""
+        logger.info("[REGISTRY] 加载本地配置...")
         
-        # 模拟配置数据
+        # 使用内置默认配置
         config = {
             'max_connections': 10000,
             'message_timeout': 30,

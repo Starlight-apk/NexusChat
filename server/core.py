@@ -349,35 +349,33 @@ class NexusChatServer:
         self.logger.info("服务器已关闭")
     
     async def _warmup_users(self):
-        """预热用户数据（模拟从数据库加载）"""
-        self.logger.info("  - 正在从数据库加载热点用户数据...")
-        await asyncio.sleep(1.5)  # 模拟数据库查询延迟
-        self.logger.info("  - 已预热 10,000 个热点用户数据")
+        """预热用户数据（从存储加载）"""
+        self.logger.info("  - 正在加载热点用户数据...")
+        # 实际实现：从数据库查询活跃用户并缓存
+        # 这里由 storage 模块自动处理，无需额外延迟
+        self.logger.info(f"  - 已预热 {len(self.storage._users)} 个用户数据")
     
     async def _warmup_rooms(self):
-        """预热房间数据（模拟从数据库加载）"""
-        self.logger.info("  - 正在从数据库加载活跃房间数据...")
-        await asyncio.sleep(1.0)  # 模拟数据库查询延迟
-        self.logger.info("  - 已预热 5,000 个活跃房间数据")
+        """预热房间数据（从存储加载）"""
+        self.logger.info("  - 正在加载活跃房间数据...")
+        # 实际实现：从数据库查询活跃房间并缓存
+        rooms = await self.storage.list_rooms()
+        self.logger.info(f"  - 已预热 {len(rooms)} 个房间数据")
     
     async def _load_sensitive_words(self):
-        """加载敏感词库（模拟从文件/数据库加载）"""
-        self.logger.info("  - 正在从分布式配置中心拉取敏感词库...")
-        await asyncio.sleep(2.0)  # 模拟网络请求和大量数据加载
+        """加载敏感词库（从配置文件加载）"""
+        self.logger.info("  - 正在从配置文件加载敏感词库...")
         
         # 从配置文件加载额外的敏感词
         sensitive_words = self.config.get("security", {}).get("content_filter", {}).get("words", [])
         for word in sensitive_words:
             self.security_manager.content_filter.add_sensitive_word(word)
         
-        # 模拟加载大量敏感词
-        self.logger.info(f"  - 已加载 {len(self.security_manager.content_filter.sensitive_words) + 50000} 个敏感词")
+        self.logger.info(f"  - 已加载 {len(self.security_manager.content_filter.sensitive_words)} 个敏感词")
         self.logger.info(f"  - 已加载 {len(self.security_manager.content_filter.sensitive_patterns)} 个正则规则")
         
-        # 加载风控规则
-        self.logger.info("  - 正在初始化机器学习风控模型...")
-        await asyncio.sleep(1.5)  # 模拟 ML 模型加载
-        self.logger.info("  - 风控模型加载完成（版本 v2.5.1）")
+        # 风控规则已在初始化时加载
+        self.logger.info("  - 风控规则已就绪")
     
     async def _handle_client(
         self,
